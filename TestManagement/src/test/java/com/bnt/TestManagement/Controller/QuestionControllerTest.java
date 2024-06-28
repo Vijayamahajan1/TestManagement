@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.bnt.TestManagement.Model.Question;
+import com.bnt.TestManagement.Model.SubCategory;
 import com.bnt.TestManagement.Service.QuestionServiceImpl;
 
 @SpringBootTest
@@ -33,7 +34,7 @@ public class QuestionControllerTest {
 
     @Test
     void createMcqQuestionTest(){
-    Question expQuestion = new Question(1l,"springboot","In Spring Boot @RestController annotation is equivalent to","@Controller and @PostMapping","@Controller and @Component","@Controller and @ResponseBody","@Controller and @ResponseStatus","@Controller and @ResponseBody",3,-1);
+    Question expQuestion = new Question(1l,Subcategory,"In Spring Boot @RestController annotation is equivalent to","@Controller and @PostMapping","@Controller and @Component","@Controller and @ResponseBody","@Controller and @ResponseStatus","@Controller and @ResponseBody",3,-1);
     when(questionService.createMcqQuestion(expQuestion)).thenReturn(expQuestion);
     ResponseEntity<Question> ActualResponseEntity = questionController.createMcqQuestion(expQuestion);
     assertEquals(HttpStatus.OK, ActualResponseEntity.getStatusCode());
@@ -62,7 +63,7 @@ public class QuestionControllerTest {
     }
     @Test
     void updateMcqQuestionTest(){
-        Question expQuestion = new Question(1l,"springboot","In Spring Boot @RestController annotation is equivalent to","@Controller and @PostMapping","@Controller and @Component","@Controller and @ResponseBody","@Controller and @ResponseStatus","@Controller and @ResponseBody",3,-1);
+        Question expQuestion = new Question(1, SubCategory subcategory = new SubCategory, null, null, null, null, null, null, 0, 0)
         when(questionService.updateMcqQuestion(expQuestion)).thenReturn(expQuestion);
         ResponseEntity<Question> ActualResult = questionController.updateMcqQuestion(expQuestion);
         assertSame(HttpStatus.OK, ActualResult.getStatusCode());
