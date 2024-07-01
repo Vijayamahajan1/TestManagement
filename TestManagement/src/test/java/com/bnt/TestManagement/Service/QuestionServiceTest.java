@@ -17,7 +17,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.bnt.TestManagement.Model.Category;
 import com.bnt.TestManagement.Model.Question;
+import com.bnt.TestManagement.Model.SubCategory;
 import com.bnt.TestManagement.Repository.QuestionRepository;
 
 @SpringBootTest
@@ -30,9 +32,13 @@ public class QuestionServiceTest {
     @InjectMocks
     QuestionServiceImpl questionService;
 
+    static  Category category = new Category(1L, "java", "Core Java category");
+    static   SubCategory subCategory = new SubCategory(1L, category, "springboot", "Spring Boot category");
+
+   
     @Test
     void createMcqQuestionTest(){
-    Question expQuestion = new Question(1l,"springboot","In Spring Boot @RestController annotation is equivalent to","@Controller and @PostMapping","@Controller and @Component","@Controller and @ResponseBody","@Controller and @ResponseStatus","@Controller and @ResponseBody",3,-1);
+    Question expQuestion = new Question(1l,subCategory,"In Spring Boot @RestController annotation is equivalent to","@Controller and @PostMapping","@Controller and @Component","@Controller and @ResponseBody","@Controller and @ResponseStatus","@Controller and @ResponseBody",3,-1);
     when(questionRepository.save(expQuestion)).thenReturn(expQuestion);
     Question Actualquestion = questionService.createMcqQuestion(expQuestion);
     assertEquals(expQuestion, Actualquestion);
@@ -41,8 +47,8 @@ public class QuestionServiceTest {
       @Test
     void getAllMcqQuestionTest(){
         List<Question> expQuestions = new ArrayList<>();
-        expQuestions.add(new Question(1l,"cpp","In Spring Boot @RestController annotation is equivalent to","@Controller and @PostMapping","@Controller and @Component","@Controller and @ResponseBody","@Controller and @ResponseStatus","@Controller and @ResponseBody",3,-1));
-        expQuestions.add(new Question(2l,"springboot","In Spring Boot @RestController annotation is equivalent to","@Controller and @PostMapping","@Controller and @Component","@Controller and @ResponseBody","@Controller and @ResponseStatus","@Controller and @ResponseBody",3,-1));
+        expQuestions.add(new Question(1l,subCategory,"In Spring Boot @RestController annotation is equivalent to","@Controller and @PostMapping","@Controller and @Component","@Controller and @ResponseBody","@Controller and @ResponseStatus","@Controller and @ResponseBody",3,-1));
+        expQuestions.add(new Question(2l,subCategory,"In Spring Boot @RestController annotation is equivalent to","@Controller and @PostMapping","@Controller and @Component","@Controller and @ResponseBody","@Controller and @ResponseStatus","@Controller and @ResponseBody",3,-1));
         when(questionRepository.findAll()).thenReturn(expQuestions);
         List<Question> ActualResult = questionService.getAllMcqQuestions();
         assertEquals(expQuestions, ActualResult);       
@@ -59,7 +65,7 @@ public class QuestionServiceTest {
 
     @Test
     void updateMcqQuestionTest(){
-        Question expQuestion = new Question(1l,"springboot","In Spring Boot @RestController annotation is equivalent to","@Controller and @PostMapping","@Controller and @Component","@Controller and @ResponseBody","@Controller and @ResponseStatus","@Controller and @ResponseBody",3,-1);
+        Question expQuestion = new Question(1l,subCategory,"In Spring Boot @RestController annotation is equivalent to","@Controller and @PostMapping","@Controller and @Component","@Controller and @ResponseBody","@Controller and @ResponseStatus","@Controller and @ResponseBody",3,-1);
         when(questionRepository.save(expQuestion)).thenReturn(expQuestion);
         Question Actualquestion = questionService.updateMcqQuestion(expQuestion);
         assertEquals(expQuestion, Actualquestion);
