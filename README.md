@@ -50,6 +50,60 @@ To run the project locally, follow these steps:
 #### Delete MCQ Question
 - Endpoint: `DELETE /TestManagement/{id}`
 - Deletes a specific MCQ question by its unique ID.
+
+# Category and Subcategory Operations
+
+## Category CRUD Operations
+
+### Create Category
+
+**POST** `http://localhost:8080/Category`
+
+Create a new category using JSON payload in the request body.
+
+### Read All Categories
+
+**GET** `http://localhost:8080/Category`
+
+Retrieve all categories stored in the database.
+
+### Update Category
+
+**PUT** `http://localhost:8080/Category`
+
+Update an existing category identified by categoryId using JSON payload in the request body.
+
+### Delete Category
+
+**DELETE** `http://localhost:8080/Category/{id}`
+
+Delete an existing category identified by categoryId.
+
+## Subcategory CRUD Operations
+
+### Create Subcategory
+
+**POST** `http://localhost:8080/SubCategory`
+
+Create a new subcategory using JSON payload in the request body.
+
+### Read All Subcategories
+
+**GET** `http://localhost:8080/SubCategory`
+
+Retrieve all subcategories stored in the database.
+
+### Update Subcategory
+
+**PUT** `http://localhost:8080/SubCategory`
+
+Update an existing subcategory identified by subcategoryId using JSON payload in the request body.
+
+### Delete Subcategory
+
+**DELETE** `http://localhost:8080/SubCategory/{id}`
+
+Delete an existing subcategory identified by subcategoryId.
  
  
 ### Contribution
