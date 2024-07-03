@@ -8,4 +8,5 @@ import com.bnt.TestManagement.Model.SubCategory;
 @Repository
 public interface SubCategoryRepository extends JpaRepository<SubCategory,Long> {
 
+    public SubCategory findBySubcategoryName(String subcategoryName);
 }

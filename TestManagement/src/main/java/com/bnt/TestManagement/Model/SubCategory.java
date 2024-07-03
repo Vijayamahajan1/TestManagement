@@ -23,6 +23,6 @@ public class SubCategory {
     @ManyToOne
     @JoinColumn(name = "category_id")
     Category category;
-    String subcategory_name;
-    String subcategory_description;
+    String subcategoryName;
+    String subcategoryDescription;
 }

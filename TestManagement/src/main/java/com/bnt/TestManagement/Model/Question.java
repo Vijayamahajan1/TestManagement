@@ -27,11 +27,11 @@ public class Question {
 	@JoinColumn(name = "subcategory_id")
 	SubCategory subCategory;
     String question;
-	String option_one;
-	String option_two;
-	String option_three;
-	String option_four;
-	String correct_option;
-	int positive_mark;
-	int negative_mark;
+	String optionOne;
+	String optionTwo;
+	String optionThree;
+	String optionFour;
+	String correctOption;
+	int positiveMark;
+	int negativeMark;
 }
