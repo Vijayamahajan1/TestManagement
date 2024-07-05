@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bnt.TestManagement.Model.Question;
 import com.bnt.TestManagement.Model.SubCategory;
-import com.bnt.TestManagement.Repository.CategoryRepository;
 import com.bnt.TestManagement.Repository.QuestionRepository;
 import com.bnt.TestManagement.Repository.SubCategoryRepository;
 
@@ -30,8 +29,6 @@ public class QuestionServiceImpl implements QuestionService{
     @Autowired
    private SubCategoryRepository subCategoryRepository;
 
-    @Autowired 
-   private CategoryRepository categoryRepository;
     
     private static final Logger logger = LoggerFactory.getLogger(QuestionService.class);
 
