@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 import com.bnt.TestManagement.Model.Category;
-import com.bnt.TestManagement.Service.CategoryServiceImpl;
+import com.bnt.TestManagement.Service.ServiceImplementation.CategoryServiceImpl;
 
 @RestController
-@RequestMapping("/Category")
+@RequestMapping("/api/category")
 public class CategoryController {
 
     @Autowired

@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 import com.bnt.TestManagement.Model.SubCategory;
-import com.bnt.TestManagement.Service.SubCategoryServiceImpl;
+import com.bnt.TestManagement.Service.ServiceImplementation.SubCategoryServiceImpl;
 
 @RestController
-@RequestMapping("/SubCategory")
+@RequestMapping("/api/subCategory")
 public class SubCategoryController {
     @Autowired
     SubCategoryServiceImpl subCategoryService;

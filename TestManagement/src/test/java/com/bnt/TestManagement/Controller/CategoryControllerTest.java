@@ -1,6 +1,7 @@
 package com.bnt.TestManagement.Controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -16,7 +17,7 @@ import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 import com.bnt.TestManagement.Model.Category;
-import com.bnt.TestManagement.Service.CategoryServiceImpl;
+import com.bnt.TestManagement.Service.ServiceImplementation.CategoryServiceImpl;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +36,7 @@ public class CategoryControllerTest {
          assertEquals(HttpStatus.OK, Actualcategory.getStatusCode());
          assertEquals(expcategory, Actualcategory.getBody());
     }
+
     @Test
     void getAllCategoryTest(){
         List<Category> expcategory = new ArrayList<>();
@@ -44,17 +46,18 @@ public class CategoryControllerTest {
         ResponseEntity<List<Category>> Actualcategory = categoryController.getAllCategory();
          assertEquals(HttpStatus.OK, Actualcategory.getStatusCode());
          assertEquals(expcategory, Actualcategory.getBody());
-
     }
 
     @Test
     void getCategoryByIdTest(){
-        Long id=1l;
-       Optional<Category> expcategory = Optional.empty();
-       when(categoryService.getCategoryById(id)).thenReturn(expcategory);
-       ResponseEntity<Optional<Category>> Actualcategory = categoryController.getCategoryById(id);
-        assertEquals(HttpStatus.OK, Actualcategory.getStatusCode());
-         assertEquals(expcategory, Actualcategory.getBody());
+        Long categoryId = 1L;
+        Category expcategory = new Category();
+        expcategory.setCategoryId(categoryId);
+        Optional<Category> optionalCategory = Optional.of(expcategory);
+        when(categoryService.getCategoryById(anyLong())).thenReturn(optionalCategory);
+        ResponseEntity<Optional<Category>> responseEntity = categoryController.getCategoryById(categoryId);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(optionalCategory, responseEntity.getBody());
     }
 
     @Test

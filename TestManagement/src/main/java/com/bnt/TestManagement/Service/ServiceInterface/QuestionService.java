@@ -1,4 +1,4 @@
-package com.bnt.TestManagement.Service;
+package com.bnt.TestManagement.Service.ServiceInterface;
 
 import java.util.List;
 import java.util.Optional;

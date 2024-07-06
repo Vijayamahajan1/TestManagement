@@ -1,4 +1,5 @@
 package com.bnt.TestManagement.Model;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +24,8 @@ public class SubCategory {
     @ManyToOne
     @JoinColumn(name = "category_id")
     Category category;
+    @Column(name = "subcategory_name")
     String subcategoryName;
+    @Column(name = "subcategory_description")
     String subcategoryDescription;
 }

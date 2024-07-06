@@ -1,6 +1,10 @@
 package com.bnt.TestManagement.Service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,8 +18,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.bnt.TestManagement.Exception.IdNotFoundException;
 import com.bnt.TestManagement.Model.Category;
 import com.bnt.TestManagement.Repository.CategoryRepository;
+import com.bnt.TestManagement.Service.ServiceImplementation.CategoryServiceImpl;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -45,24 +51,37 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void getCategoryByIdTest(){
-        Long id=1l;
-       Optional<Category> expcategory = Optional.empty();
-       when(categoryRepository.findById(id)).thenReturn(expcategory);
-       Optional<Category> Actualcategory = categoryService.getCategoryById(id);
-        assertEquals(expcategory, Actualcategory);
+    public void GetCategoryById(){
+    Long id = 1L;
+    when(categoryRepository.findById(anyLong())).thenReturn(Optional.empty());
+    assertThrows(IdNotFoundException.class, () -> categoryService.getCategoryById(id));
+    verify(categoryRepository, times(1)).findById(id);
     }
+
     @Test
     void updateCategoryTest(){
-        Category expcategory = new Category(1l, "java", "Core Java category");
-        when(categoryRepository.save(expcategory)).thenReturn(expcategory);
-        Category Actualcategory = categoryService.updateCategory(expcategory);
-        assertEquals(expcategory, Actualcategory);
-    }
+    Long categoryId = 1L;
+    Category existingCategory = new Category(categoryId, "Existing Category", "Existing Description");
+    Category updatedCategory = new Category(categoryId, "Updated Category", "Updated Description");
+    when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(existingCategory));
+    when(categoryRepository.save(any(Category.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    Category result = categoryService.updateCategory(updatedCategory);
+    assertNotNull(result);
+    assertEquals("Updated Category", result.getCategoryName());
+    assertEquals("Updated Description", result.getCategoryDescription());
+    verify(categoryRepository, times(1)).findById(categoryId);
+    verify(categoryRepository, times(1)).save(existingCategory);
+}
+    
+    
      @Test
     void deleteCategoryTest(){
-         Long id=1l;
-            categoryService.deleteCategory(id);
-            verify(categoryRepository,times(1)).deleteById(id);
+        Long id = 1L;
+        Category existingCategory = new Category(id, "Existing Category", "Existing Description");
+        when(categoryRepository.findById(id)).thenReturn(Optional.of(existingCategory));
+        categoryService.deleteCategory(id);
+        verify(categoryRepository, times(1)).findById(id);
+        verify(categoryRepository, times(1)).deleteById(id);
     }
 }
+

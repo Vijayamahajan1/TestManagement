@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.bnt.TestManagement.Model.Question;
-import com.bnt.TestManagement.Service.QuestionServiceImpl;
+import com.bnt.TestManagement.Service.ServiceImplementation.QuestionServiceImpl;
 
 @RestController
-@RequestMapping("/TestManagement")
+@RequestMapping("/api/testManagement")
 public class QuestionController {
     @Autowired
     QuestionServiceImpl questionService;
@@ -37,32 +37,35 @@ public class QuestionController {
         Question createdQuestion = questionService.createMcqQuestion(question);
         return new ResponseEntity<Question>(createdQuestion, HttpStatus.OK);
     }
+
     @GetMapping
     public ResponseEntity<List<Question>> getAllMcqQuestions(){
         logger.info("Get all the Questions");
         List<Question> getedAllQuestion = questionService.getAllMcqQuestions();
         return new ResponseEntity<List<Question>>(getedAllQuestion,HttpStatus.OK);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Question>> getMcqQuestionById(@PathVariable ("id") Long id ){
         logger.info("Get the question with id"+id);
         Optional<Question> getedQuestion = questionService.getMcqQuestionById(id);
         return new ResponseEntity<>(getedQuestion,HttpStatus.OK);
     }
-    @PutMapping("/update")
+
+    @PutMapping
     public ResponseEntity<Question> updateMcqQuestion(@RequestBody Question question){
         logger.info("Update the question");
         Question updatedQuestion = questionService.updateMcqQuestion(question);
         return new ResponseEntity<Question>(updatedQuestion,HttpStatus.OK);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteMCqQuestion(@PathVariable ("id") Long id) {
      questionService.deleteMCqQuestion(id);
      logger.info("deleted the question with id"+id);
       return new ResponseEntity<>("Question deleted Successfully" ,HttpStatus.OK);
     }
-    
-   
+     
    @PostMapping("/bulk-upload")
    public ResponseEntity<String> bulkUploadQuestions(@RequestParam("file") MultipartFile file) throws Exception {
        questionService.uploadExcelFile(file);

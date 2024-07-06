@@ -1,5 +1,6 @@
 package com.bnt.TestManagement.Model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,12 +27,20 @@ public class Question {
     @ManyToOne
 	@JoinColumn(name = "subcategory_id")
 	SubCategory subCategory;
+	@Column(name = "question")
     String question;
+	@Column(name = "option_one")
 	String optionOne;
+	@Column(name = "option_two")
 	String optionTwo;
+	@Column(name = "option_three")
 	String optionThree;
+	@Column(name = "option_Four")
 	String optionFour;
+	@Column(name = "correct_option")
 	String correctOption;
+	@Column(name = "positive_mark")
 	int positiveMark;
+	@Column(name = "negative_mark")
 	int negativeMark;
 }

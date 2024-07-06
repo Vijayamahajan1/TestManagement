@@ -2,6 +2,7 @@ package com.bnt.TestManagement.Controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -21,7 +22,7 @@ import org.springframework.http.ResponseEntity;
 import com.bnt.TestManagement.Model.Category;
 import com.bnt.TestManagement.Model.Question;
 import com.bnt.TestManagement.Model.SubCategory;
-import com.bnt.TestManagement.Service.QuestionServiceImpl;
+import com.bnt.TestManagement.Service.ServiceImplementation.QuestionServiceImpl;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -58,13 +59,16 @@ public class QuestionControllerTest {
 
     @Test
     void getMcqQuestionByIdTest(){
-        Long id=1l;
-       Optional<Question> expQuestion = Optional.empty();
-       when(questionService.getMcqQuestionById(id)).thenReturn(expQuestion);
-       ResponseEntity<Optional<Question>> ActualResult = questionController.getMcqQuestionById(1l);
-       assertSame(HttpStatus.OK, ActualResult.getStatusCode());
-       assertSame(expQuestion, ActualResult.getBody());  
+      Long questionId = 1L;
+        Question expQuestion = new Question();
+        expQuestion.setQuestion_id(questionId);
+        Optional<Question> optionalQuestion = Optional.of(expQuestion);
+        when(questionService.getMcqQuestionById(anyLong())).thenReturn(optionalQuestion);
+        ResponseEntity<Optional<Question>> responseEntity = questionController.getMcqQuestionById(questionId);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(optionalQuestion, responseEntity.getBody()); 
     }
+
     @Test
     void updateMcqQuestionTest(){
         Question expQuestion = new Question(1l,subCategory,"In Spring Boot @RestController annotation is equivalent to","@Controller and @PostMapping","@Controller and @Component","@Controller and @ResponseBody","@Controller and @ResponseStatus","@Controller and @ResponseBody",3,-1);
@@ -73,6 +77,7 @@ public class QuestionControllerTest {
         assertSame(HttpStatus.OK, ActualResult.getStatusCode());
         assertSame(expQuestion, ActualResult.getBody()); 
     }
+
     @Test
     void deleteMcqQuestionTest(){
         Long id=1l;
