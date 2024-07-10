@@ -1,4 +1,4 @@
-# Spring Boot MCQ Question Management System
+# TestManagement
 This project is a Spring Boot application for managing Multiple Choice Questions (MCQs). It provides CRUD operations via RESTful endpoints for managing MCQs in a database.
 ### Technologies Used
 - Java 21
@@ -32,23 +32,23 @@ To run the project locally, follow these steps:
 ### API Endpoints
  
 #### Create MCQ Question
-- Endpoint: `POST /TestManagement`
+- Endpoint: `POST /api/testManagement`
 - Creates a new MCQ question in the database.
  
 #### Update MCQ Question
-- Endpoint: `PUT /TestManagement/update`
+- Endpoint: `PUT /api/testManagement`
 - Updates an existing MCQ question in the database.
  
 #### Get All MCQ Questions
-- Endpoint: `GET /TestManagement`
+- Endpoint: `GET /api/testManagement`
 - Retrieves all MCQ questions stored in the database.
  
 #### Get MCQ Question by ID
-- Endpoint: `GET /TestManagement/{id}`
+- Endpoint: `GET /api/testManagement/{id}`
 - Retrieves a specific MCQ question by its unique ID.
  
 #### Delete MCQ Question
-- Endpoint: `DELETE /TestManagement/{id}`
+- Endpoint: `DELETE /api/testManagement/{id}`
 - Deletes a specific MCQ question by its unique ID.
 
 # Category and Subcategory Operations
@@ -57,25 +57,25 @@ To run the project locally, follow these steps:
 
 ### Create Category
 
-**POST** `http://localhost:8080/Category`
+**POST** `http://localhost:8080/api/category`
 
 Create a new category using JSON payload in the request body.
 
 ### Read All Categories
 
-**GET** `http://localhost:8080/Category`
+**GET** `http://localhost:8080/api/category`
 
 Retrieve all categories stored in the database.
 
 ### Update Category
 
-**PUT** `http://localhost:8080/Category`
+**PUT** `http://localhost:8080/api/category`
 
 Update an existing category identified by categoryId using JSON payload in the request body.
 
 ### Delete Category
 
-**DELETE** `http://localhost:8080/Category/{id}`
+**DELETE** `http://localhost:8080/api/category/{id}`
 
 Delete an existing category identified by categoryId.
 
@@ -83,28 +83,35 @@ Delete an existing category identified by categoryId.
 
 ### Create Subcategory
 
-**POST** `http://localhost:8080/SubCategory`
+**POST** `http://localhost:8080/api/subCategory`
 
 Create a new subcategory using JSON payload in the request body.
 
 ### Read All Subcategories
 
-**GET** `http://localhost:8080/SubCategory`
+**GET** `http://localhost:8080/api/subCategory`
 
 Retrieve all subcategories stored in the database.
 
 ### Update Subcategory
 
-**PUT** `http://localhost:8080/SubCategory`
+**PUT** `http://localhost:8080/api/subCategory`
 
 Update an existing subcategory identified by subcategoryId using JSON payload in the request body.
 
 ### Delete Subcategory
 
-**DELETE** `http://localhost:8080/SubCategory/{id}`
+**DELETE** `http://localhost:8080/api/subCategory/{id}`
 
 Delete an existing subcategory identified by subcategoryId.
- 
+
+### Bulk Upload Excel File Method
+
+#### Upload Excel File
+
+**POST** `http://localhost:8080/api/testmanagement/bulk-upload`
+
+Upload an Excel file containing MCQ questions. The Excel file should be processed to extract and save MCQ questions into the database. 
  
 ### Contribution
 Feel free to fork this repository, propose changes via pull requests, or report issues.
