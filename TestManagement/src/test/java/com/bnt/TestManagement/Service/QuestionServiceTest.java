@@ -20,7 +20,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.bnt.TestManagement.Exception.DataIsNotPresent;
 import com.bnt.TestManagement.Exception.IdNotFoundException;
+import com.bnt.TestManagement.Exception.QuestionModelEmpty;
 import com.bnt.TestManagement.Model.Category;
 import com.bnt.TestManagement.Model.Question;
 import com.bnt.TestManagement.Model.SubCategory;
@@ -97,5 +99,50 @@ void deleteMcqQuestionTest() {
     verify(questionRepository, times(1)).findById(id);
     verify(questionRepository, times(1)).deleteById(id);
 }
+
+// ---------------------------------------------------Negative Test Case-------------------------------------------------//
+
+    @Test
+    void createMcqQuestionTest_QuestionModelIsEmpty() {
+    Question questionWithNullField = new Question();
+    questionWithNullField.setQuestion(null);
+    
+    QuestionModelEmpty thrown = assertThrows(
+        QuestionModelEmpty.class,
+        () -> questionService.createMcqQuestion(questionWithNullField)
+    );
+    assertEquals("Question model is empty", thrown.getMessage());
+}
+
+    @Test
+    void getByMcqQuestionIdTest_IdNotFound() {
+    Long invalidId = -1L;
+    when(questionRepository.findById(invalidId)).thenReturn(Optional.empty());
+    
+    IdNotFoundException thrown = assertThrows(
+        IdNotFoundException.class,
+        () -> questionService.getMcqQuestionById(invalidId)
+    );
+    assertEquals("Id Not Found:" + invalidId, thrown.getMessage());
+   }
+
+     @Test
+    void getAllMcqQuestionTest_DataIsNotPresent() {
+    List<Question> emptyQuestionList = new ArrayList<>();
+    when(questionRepository.findAll()).thenReturn(emptyQuestionList);
+    DataIsNotPresent thrown = assertThrows(
+            DataIsNotPresent.class,
+            () -> questionService.getAllMcqQuestions()
+        );
+        assertEquals("Data is not present", thrown.getMessage());
+    }
+
+
+
+
+
+
+
+
 
 }

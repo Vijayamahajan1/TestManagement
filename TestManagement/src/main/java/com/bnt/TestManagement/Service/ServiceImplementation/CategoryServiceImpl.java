@@ -55,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
         logger.info("getCategoryById method called");
         Optional<Category> category = categoryRepository.findById(id);
         if (!category.isPresent()) {
-            throw new IdNotFoundException("Id Not Found;");
+            throw new IdNotFoundException("Id Not Found:"+ id);
         }
         return category;
     }

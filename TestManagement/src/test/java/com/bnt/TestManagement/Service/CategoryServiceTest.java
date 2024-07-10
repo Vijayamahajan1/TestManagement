@@ -18,7 +18,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.bnt.TestManagement.Exception.DataIsNotPresent;
 import com.bnt.TestManagement.Exception.IdNotFoundException;
+import com.bnt.TestManagement.Exception.InvalidDataException;
 import com.bnt.TestManagement.Model.Category;
 import com.bnt.TestManagement.Repository.CategoryRepository;
 import com.bnt.TestManagement.Service.ServiceImplementation.CategoryServiceImpl;
@@ -83,5 +85,70 @@ public class CategoryServiceTest {
         verify(categoryRepository, times(1)).findById(id);
         verify(categoryRepository, times(1)).deleteById(id);
     }
+
+    // -----------------------------------------Negative test cases--------------------------------------------------//
+
+    @Test
+    void createCategoryTest_InvalidData() {
+    Category invalidCategory = new Category(1L, null, "core java directory");
+    InvalidDataException thrown = assertThrows(
+        InvalidDataException.class,
+        () -> categoryService.createCategory(invalidCategory)    
+    );
+    assertEquals("Data Is Invalid", thrown.getMessage());
+   }
+
+    @Test
+    void getAllCategoryTest_DataIsNotPresent() {
+    List<Category> emptyCategoryList = new ArrayList<>();
+    when(categoryRepository.findAll()).thenReturn(emptyCategoryList);  
+    DataIsNotPresent thrown = assertThrows(
+            DataIsNotPresent.class,
+            () -> categoryService.getAllCategory()
+        );
+        assertEquals("Data is not present", thrown.getMessage());
+    }
+
+    @Test
+    void getCategoryByIdTest_IdNotFound() {
+    Long invalidId = -1L;
+    when(categoryRepository.findById(invalidId)).thenReturn(Optional.empty());
+    
+    IdNotFoundException thrown = assertThrows(
+        IdNotFoundException.class,
+        () -> categoryService.getCategoryById(invalidId)
+    );
+    assertEquals("Id Not Found:" + invalidId, thrown.getMessage());
+   }
+
+
+   @Test
+   void updateCategoryIdTest_IdNotFound() {
+       Category categoryWithInvalidId = new Category(-1L, "Java", "core java directory");
+       when(categoryRepository.findById(categoryWithInvalidId.getCategoryId())).thenReturn(Optional.empty());
+   
+       IdNotFoundException thrown = assertThrows(
+           IdNotFoundException.class,
+           () -> categoryService.updateCategory(categoryWithInvalidId)
+       );
+       assertEquals("Id Is Not Present", thrown.getMessage());
+   }
+   
+   @Test
+   void deleteCategoryTest_IdNotFound() {
+       Long invalidId = -1L;
+       when(categoryRepository.findById(invalidId)).thenReturn(Optional.empty());
+       
+       IdNotFoundException thrown = assertThrows(
+           IdNotFoundException.class,
+           () -> categoryService.deleteCategory(invalidId)
+       );
+       assertEquals("Id is Not Found", thrown.getMessage());
+   }
+
+   
+   
+
+
 }
 

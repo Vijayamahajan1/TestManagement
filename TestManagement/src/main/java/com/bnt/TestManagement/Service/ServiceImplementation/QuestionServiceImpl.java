@@ -64,7 +64,7 @@ public class QuestionServiceImpl implements QuestionService{
         Optional<Question> question = questionRepository.findById(id);
        if(!question.isPresent()){    
             logger.error("Exception occured");       
-            throw new IdNotFoundException("Id not found with id");
+            throw new IdNotFoundException("Id Not Found:"+id);
         }
        return question;   
     }
