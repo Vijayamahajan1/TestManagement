@@ -2,6 +2,7 @@ package com.bnt.TestManagement.Service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -18,6 +19,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.bnt.TestManagement.Exception.DataIsNotPresent;
+import com.bnt.TestManagement.Exception.IdNotFoundException;
+import com.bnt.TestManagement.Exception.InvalidDataException;
 import com.bnt.TestManagement.Model.Category;
 import com.bnt.TestManagement.Model.SubCategory;
 import com.bnt.TestManagement.Repository.SubCategoryRepository;
@@ -94,4 +99,58 @@ void testUpdateSubCategory_found() {
         verify(subCategoryRepository, times(1)).findById(id);
         verify(subCategoryRepository, times(1)).deleteById(id);
     }
+
+    //<< -----------------------------------Negative Test cases--------------------------------------------- >>
+
+    @Test
+    void CreateSubCategoryTest_NullSubcategoryName() {
+    SubCategory subCategory = new SubCategory();
+    subCategory.setSubcategoryName(null);
+    subCategory.setSubcategoryDescription("Collections from java");
+    InvalidDataException exception = assertThrows(InvalidDataException.class, () -> 
+        subCategoryService.createSubCategory(subCategory));
+        assertEquals("Data Is Invalid", exception.getMessage());
+    }
+
+    @Test
+    void getAllSubCategoryTest_DataIsNotPresent() {
+    List<SubCategory> emptySubCategoryList = new ArrayList<>();
+    when(subCategoryRepository.findAll()).thenReturn(emptySubCategoryList);  
+    DataIsNotPresent thrown = assertThrows(
+            DataIsNotPresent.class,
+            () -> subCategoryService.getAllSubCategory());
+        assertEquals("Data is not present", thrown.getMessage());
+    }
+
+    @Test
+    void getSubCategoryByIdTest_IdNotFound() {
+    Long invalidId = -1L;
+    when(subCategoryRepository.findById(invalidId)).thenReturn(Optional.empty());  
+    IdNotFoundException thrown = assertThrows(
+        IdNotFoundException.class,
+        () -> subCategoryService.getSubCategoryById(invalidId));
+    assertEquals("Id Not Found:" + invalidId, thrown.getMessage());
+   }
+
+
+   @Test
+   void updateSubCategoryTest_IdNotFound() {
+       SubCategory newSubCategory = new SubCategory();
+       newSubCategory.setSubcategory_id(999L); 
+       when(subCategoryRepository.findById(newSubCategory.getSubcategory_id())).thenReturn(Optional.empty());
+       IdNotFoundException exception = assertThrows(IdNotFoundException.class, () -> 
+           subCategoryService.updateSubCategory(newSubCategory));
+       assertEquals("Id Is Not Present", exception.getMessage());
+   }
+   
+   @Test
+   void deleteSubCategoryTest_IdNotFound() {
+       Long invalidId = -1L;
+       when(subCategoryRepository.findById(invalidId)).thenReturn(Optional.empty());       
+       IdNotFoundException thrown = assertThrows(
+           IdNotFoundException.class,
+           () -> subCategoryService.deleteSubCategory(invalidId));
+       assertEquals("Id is Not Found", thrown.getMessage());
+   }
+
 }

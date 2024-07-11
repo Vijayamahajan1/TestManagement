@@ -1,9 +1,10 @@
 package com.bnt.TestManagement.Service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -62,17 +63,12 @@ public class QuestionServiceTest {
     }
 
     @Test
-    void getMcqQuestionByIdTest() {
+    public void GetMcqQuestionById(){
     Long id = 1L;
-    Optional<Question> expQuestion = Optional.empty();
-    when(questionRepository.findById(id)).thenReturn(expQuestion);
-    IdNotFoundException thrown = assertThrows(
-        IdNotFoundException.class,
-        () -> questionService.getMcqQuestionById(id),
-        "Expected getMcqQuestionById to throw, but it didn't"
-    );
-    assertFalse(thrown.getMessage().contains("Id not found with id: " + id));
-}
+    when(questionRepository.findById(anyLong())).thenReturn(Optional.empty());
+    assertThrows(IdNotFoundException.class, () -> questionService.getMcqQuestionById(id));
+    verify(questionRepository, times(1)).findById(id);
+    }
 
 
 @Test
@@ -100,17 +96,15 @@ void deleteMcqQuestionTest() {
     verify(questionRepository, times(1)).deleteById(id);
 }
 
-// ---------------------------------------------------Negative Test Case-------------------------------------------------//
+// <<---------------------------------------------------Negative Test Case------------------------------------------------->>
 
     @Test
     void createMcqQuestionTest_QuestionModelIsEmpty() {
     Question questionWithNullField = new Question();
-    questionWithNullField.setQuestion(null);
-    
+    questionWithNullField.setQuestion(null);   
     QuestionModelEmpty thrown = assertThrows(
         QuestionModelEmpty.class,
-        () -> questionService.createMcqQuestion(questionWithNullField)
-    );
+        () -> questionService.createMcqQuestion(questionWithNullField));
     assertEquals("Question model is empty", thrown.getMessage());
 }
 
@@ -121,8 +115,7 @@ void deleteMcqQuestionTest() {
     
     IdNotFoundException thrown = assertThrows(
         IdNotFoundException.class,
-        () -> questionService.getMcqQuestionById(invalidId)
-    );
+        () -> questionService.getMcqQuestionById(invalidId));
     assertEquals("Id Not Found:" + invalidId, thrown.getMessage());
    }
 
@@ -132,17 +125,35 @@ void deleteMcqQuestionTest() {
     when(questionRepository.findAll()).thenReturn(emptyQuestionList);
     DataIsNotPresent thrown = assertThrows(
             DataIsNotPresent.class,
-            () -> questionService.getAllMcqQuestions()
-        );
+            () -> questionService.getAllMcqQuestions());
         assertEquals("Data is not present", thrown.getMessage());
     }
 
+    @Test
+    void testUpdateMcqQuestion_IdNotFound() {
+        Question newQuestion = new Question();
+        newQuestion.setQuestion_id(999L); 
+        when(questionRepository.findById(newQuestion.getQuestion_id())).thenReturn(Optional.empty());
+        IdNotFoundException exception = assertThrows(IdNotFoundException.class, () -> 
+            questionService.updateMcqQuestion(newQuestion));
+        assertEquals("Id is Not Present", exception.getMessage());
+    }
 
-
-
-
-
-
-
-
+    @Test
+    void testDeleteMcqQuestion_IdNotFound() {
+        Long questionId = 999L;
+        when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
+        IdNotFoundException exception = assertThrows(IdNotFoundException.class, () ->
+            questionService.deleteMCqQuestion(questionId));
+        assertEquals("Id is Not Found", exception.getMessage());
+    }
+    
 }
+    
+
+
+
+
+
+
+

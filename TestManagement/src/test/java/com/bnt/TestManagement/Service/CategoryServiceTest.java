@@ -86,15 +86,14 @@ public class CategoryServiceTest {
         verify(categoryRepository, times(1)).deleteById(id);
     }
 
-    // -----------------------------------------Negative test cases--------------------------------------------------//
+    // <<-----------------------------------------Negative test cases-------------------------------------------------->>
 
     @Test
     void createCategoryTest_InvalidData() {
     Category invalidCategory = new Category(1L, null, "core java directory");
     InvalidDataException thrown = assertThrows(
         InvalidDataException.class,
-        () -> categoryService.createCategory(invalidCategory)    
-    );
+        () -> categoryService.createCategory(invalidCategory));
     assertEquals("Data Is Invalid", thrown.getMessage());
    }
 
@@ -104,20 +103,17 @@ public class CategoryServiceTest {
     when(categoryRepository.findAll()).thenReturn(emptyCategoryList);  
     DataIsNotPresent thrown = assertThrows(
             DataIsNotPresent.class,
-            () -> categoryService.getAllCategory()
-        );
+            () -> categoryService.getAllCategory());
         assertEquals("Data is not present", thrown.getMessage());
     }
 
     @Test
     void getCategoryByIdTest_IdNotFound() {
     Long invalidId = -1L;
-    when(categoryRepository.findById(invalidId)).thenReturn(Optional.empty());
-    
+    when(categoryRepository.findById(invalidId)).thenReturn(Optional.empty());   
     IdNotFoundException thrown = assertThrows(
         IdNotFoundException.class,
-        () -> categoryService.getCategoryById(invalidId)
-    );
+        () -> categoryService.getCategoryById(invalidId));
     assertEquals("Id Not Found:" + invalidId, thrown.getMessage());
    }
 
@@ -125,30 +121,21 @@ public class CategoryServiceTest {
    @Test
    void updateCategoryIdTest_IdNotFound() {
        Category categoryWithInvalidId = new Category(-1L, "Java", "core java directory");
-       when(categoryRepository.findById(categoryWithInvalidId.getCategoryId())).thenReturn(Optional.empty());
-   
+       when(categoryRepository.findById(categoryWithInvalidId.getCategoryId())).thenReturn(Optional.empty());  
        IdNotFoundException thrown = assertThrows(
            IdNotFoundException.class,
-           () -> categoryService.updateCategory(categoryWithInvalidId)
-       );
+           () -> categoryService.updateCategory(categoryWithInvalidId));
        assertEquals("Id Is Not Present", thrown.getMessage());
    }
    
    @Test
    void deleteCategoryTest_IdNotFound() {
        Long invalidId = -1L;
-       when(categoryRepository.findById(invalidId)).thenReturn(Optional.empty());
-       
+       when(categoryRepository.findById(invalidId)).thenReturn(Optional.empty());      
        IdNotFoundException thrown = assertThrows(
            IdNotFoundException.class,
-           () -> categoryService.deleteCategory(invalidId)
-       );
+           () -> categoryService.deleteCategory(invalidId));
        assertEquals("Id is Not Found", thrown.getMessage());
    }
-
-   
-   
-
-
 }
 

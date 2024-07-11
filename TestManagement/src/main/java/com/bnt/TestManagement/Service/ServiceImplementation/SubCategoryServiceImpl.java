@@ -53,10 +53,10 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     @Override
     public Optional<SubCategory> getSubCategoryById(Long id) {
         logger.info("getSubCategoryById method is called");
-        Optional<SubCategory> subcategory=  subCategoryRepository.findById(id);
+        Optional<SubCategory> subcategory =  subCategoryRepository.findById(id);
         if(!subcategory.isPresent()){
         logger.error("Execption Occured");
-         throw new IdNotFoundException("Id Not Found;");
+         throw new IdNotFoundException("Id Not Found:"+id);
       }
       return subcategory;
     }
