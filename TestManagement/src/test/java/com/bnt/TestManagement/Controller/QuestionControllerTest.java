@@ -2,8 +2,10 @@ package com.bnt.TestManagement.Controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -87,5 +89,55 @@ public class QuestionControllerTest {
         assertEquals("Question deleted Successfully", ActualResponseEntity.getBody());
 
     }
+//>>------------------------------------------Negative test cases------------------------------------------------------->>
+
+@Test
+void createMcqQuestionTest_ServiceError() {
+    Question question = new Question(1L, subCategory, "Question?", "Option A", "Option B", "Option C", "Option D", "Option C", 1, -1);
+    when(questionService.createMcqQuestion(question)).thenThrow(new RuntimeException("Service error"));
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> 
+    questionController.createMcqQuestion(question));   
+    assertEquals("Service error", exception.getMessage());
+}
+
+    @Test
+    void getAllMcqQuestionTest_ServerError() {
+    when(questionService.getAllMcqQuestions()).thenThrow(new RuntimeException("Server error"));
+    Exception exception = assertThrows(RuntimeException.class, () -> 
+    questionController.getAllMcqQuestions());
+    assertEquals("Server error", exception.getMessage());
+    }
+
+    @Test
+    void getMcqQuestionByIdTest_NotFound() {
+    Long questionId = 1L;
+    when(questionService.getMcqQuestionById(questionId)).thenThrow(new RuntimeException("Question not found"));
+    Exception exception = assertThrows(RuntimeException.class, () -> 
+    questionController.getMcqQuestionById(questionId));
+    assertEquals("Question not found", exception.getMessage());
+   }
+
+    @Test
+    void updateMcqQuestionTest_InvalidQuestion() {
+    Question invalidQuestion = new Question(1L, subCategory, null, "Option A", "Option B", "Option C", "Option D", "Option A", 1, -1); // Assuming question text is required
+    when(questionService.updateMcqQuestion(invalidQuestion)).thenThrow(new IllegalArgumentException("Invalid question data"));
+    Exception exception = assertThrows(IllegalArgumentException.class, () ->
+    questionController.updateMcqQuestion(invalidQuestion));   
+    assertEquals("Invalid question data", exception.getMessage());
+   }
+
+    @Test
+    void deleteMcqQuestionTest_NotFound() {
+    Long id = 1L;
+    doThrow(new RuntimeException("Question not found")).when(questionService).deleteMCqQuestion(id);
+    Exception exception = assertThrows(RuntimeException.class, () -> 
+    questionController.deleteMCqQuestion(id));   
+    assertEquals("Question not found", exception.getMessage());
+}
+
+
 
 }
+
+
+

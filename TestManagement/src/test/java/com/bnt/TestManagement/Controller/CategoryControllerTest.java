@@ -1,8 +1,11 @@
 package com.bnt.TestManagement.Controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
@@ -77,4 +80,51 @@ public class CategoryControllerTest {
         assertEquals(HttpStatus.OK, ActualResponseEntity.getStatusCode());
         assertEquals("Category deleted Successuly", ActualResponseEntity.getBody());
     }
-}
+//>>-----------------------------------------Negative Test Cases--------------------------------------->>
+
+    @Test
+    void createCategoryTest_IllegalArgumentException() {
+        Category invalidCategory = new Category();
+        invalidCategory.setCategoryName(null);;
+        when(categoryService.createCategory(any(Category.class))).thenThrow(new IllegalArgumentException("Invalid category data"));
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        categoryController.createCategory(invalidCategory));
+        assertEquals("Invalid category data", exception.getMessage());
+    }
+
+    @Test
+    void getCategoryAllTest_ServerError() {
+        doThrow(new RuntimeException("Server Error")).when(categoryService).getAllCategory();
+        Exception exception = assertThrows(RuntimeException.class, () -> 
+        categoryController.getAllCategory());
+        assertEquals("Server Error", exception.getMessage());
+    }
+
+    @Test
+    void getCategoryIdTest_CategoryNotFound() {
+        Long id = 1L;
+        doThrow(new RuntimeException("Category not found")).when(categoryService).getCategoryById(id);
+        Exception exception = assertThrows(RuntimeException.class, () -> 
+        categoryController.getCategoryById(id));
+        assertEquals("Category not found", exception.getMessage());
+    }
+
+    @Test
+    void updateCategoryTest_InvalidCategory() {
+        Category invalidCategory = new Category(1L, null, "No name"); // Assuming name is required
+        when(categoryService.updateCategory(invalidCategory)).thenThrow(new IllegalArgumentException("Invalid category data"));
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        categoryController.updateCategory(invalidCategory));
+        assertEquals("Invalid category data", exception.getMessage());
+    }
+
+    @Test
+    void deleteCategoryTest_CategoryNotFound() {
+        Long id = 1L;
+        doThrow(new RuntimeException("Category not found")).when(categoryService).deleteCategory(id);
+        Exception exception = assertThrows(RuntimeException.class, () -> 
+        categoryController.deleteCategory(id));
+        assertEquals("Category not found", exception.getMessage());
+    }
+}    
+

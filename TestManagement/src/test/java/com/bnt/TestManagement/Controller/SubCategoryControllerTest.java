@@ -1,9 +1,11 @@
 package com.bnt.TestManagement.Controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -85,4 +87,56 @@ public class SubCategoryControllerTest {
         assertEquals(HttpStatus.OK, ActualResponseEntity.getStatusCode());
         assertEquals("Subcategory delted Successfully", ActualResponseEntity.getBody());
     }
-}
+
+    //>>-----------------------------------------Negative Test Cases--------------------------------------->>
+
+    @Test
+    void createSubCategoryTest_IllegalArgumentException() {
+        SubCategory invalidSubCategory = new SubCategory();
+        invalidSubCategory.setSubcategoryName(null);;
+        when(subCategoryService.createSubCategory(any(SubCategory.class))).thenThrow(new IllegalArgumentException("Invalid subcategory data"));
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        subCategoryController.createSubCategory(invalidSubCategory));
+        assertEquals("Invalid subcategory data", exception.getMessage());
+    }
+
+    @Test
+    void getSubCategoryAllTest_ServerError() {
+        doThrow(new RuntimeException("Server Error")).when(subCategoryService).getAllSubCategory();
+        Exception exception = assertThrows(RuntimeException.class, () -> 
+        subCategoryController.getAllSubCategory());
+        assertEquals("Server Error", exception.getMessage());
+    }
+
+    @Test
+    void getSubCategoryIdTest_SubCategoryNotFound() {
+        Long id = 1L;
+        doThrow(new RuntimeException("SubCategory not found")).when(subCategoryService).getSubCategoryById(id);
+        Exception exception = assertThrows(RuntimeException.class, () -> 
+        subCategoryController.getSubCategoryById(id));
+        assertEquals("SubCategory not found", exception.getMessage());
+    }
+
+    @Test
+    void updateSubCategoryTest_InvalidSubCategory() {
+        SubCategory subCategory = new SubCategory(); 
+        subCategory.setSubcategoryName(null);
+        subCategory.setSubcategoryDescription("Collections from java");
+        when(subCategoryService.updateSubCategory(subCategory)).thenThrow(new IllegalArgumentException("Invalid subcategory data"));
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        subCategoryController.updateSubcategory(subCategory));
+        assertEquals("Invalid subcategory data", exception.getMessage());
+    }
+
+    @Test
+    void deleteSubCategoryTest_SubCategoryNotFound() {
+        Long id = 1L;
+        doThrow(new RuntimeException("SubCategory not found")).when(subCategoryService).deleteSubCategory(id);
+        Exception exception = assertThrows(RuntimeException.class, () -> 
+        subCategoryController.deleteSubCategory(id));
+        assertEquals("SubCategory not found", exception.getMessage());
+    }
+}    
+
+
+

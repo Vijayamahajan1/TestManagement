@@ -32,5 +32,10 @@ public class GlobalExceptionHandler{
   public ResponseEntity<Object> DataAllreadyPresentException(DataAllreadyPresentException e){
     return new ResponseEntity<Object>("Data Allready present", HttpStatus.NOT_FOUND);
   }
+
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<Object> handleRuntimeException(RuntimeException e) {
+      return new ResponseEntity<>("Service error", HttpStatus.INTERNAL_SERVER_ERROR);
+  }
     
 }
